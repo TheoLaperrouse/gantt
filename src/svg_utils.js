@@ -1,7 +1,5 @@
 export function $(expr, con) {
-    return typeof expr === 'string'
-        ? (con || document).querySelector(expr)
-        : expr || null;
+    return typeof expr === 'string' ? (con || document).querySelector(expr) : expr || null;
 }
 
 export function createSVG(tag, attrs) {
@@ -34,14 +32,7 @@ export function animateSVG(svgElement, attr, from, to) {
     }
 }
 
-function getAnimationElement(
-    svgElement,
-    attr,
-    from,
-    to,
-    dur = '0.4s',
-    begin = '0.1s',
-) {
+function getAnimationElement(svgElement, attr, from, to, dur = '0.4s', begin = '0.1s') {
     const animEl = svgElement.querySelector('animate');
     if (animEl) {
         $.attr(animEl, {

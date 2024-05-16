@@ -45,8 +45,7 @@ export default class Popup {
         }
 
         this.parent.style.left = options.x - this.parent.clientWidth / 2 + 'px';
-        this.parent.style.top =
-            position_meta.y + position_meta.height + 10 + 'px';
+        this.parent.style.top = position_meta.y + position_meta.height + 10 + 'px';
 
         this.pointer.style.left = this.parent.clientWidth / 2 + 'px';
         this.pointer.style.top = '-15px';

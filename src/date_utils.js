@@ -51,9 +51,7 @@ export default {
         if (typeof date === 'string') {
             let date_parts, time_parts;
             const parts = date.split(' ');
-            date_parts = parts[0]
-                .split(date_separator)
-                .map((val) => parseInt(val, 10));
+            date_parts = parts[0].split(date_separator).map((val) => parseInt(val, 10));
             time_parts = parts[1] && parts[1].split(time_separator);
 
             // month is 0 indexed
@@ -99,8 +97,7 @@ export default {
             month: 'long',
         });
         const month_name = dateTimeFormat.format(date);
-        const month_name_capitalized =
-            month_name.charAt(0).toUpperCase() + month_name.slice(1);
+        const month_name_capitalized = month_name.charAt(0).toUpperCase() + month_name.slice(1);
 
         const values = this.get_date_values(date).map((d) => padStart(d, 2, 0));
         const format_map = {

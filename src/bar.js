@@ -29,10 +29,7 @@ export default class Bar {
         this.compute_duration();
         this.corner_radius = this.gantt.options.bar_corner_radius;
         this.width = this.gantt.options.column_width * this.duration;
-        this.progress_width =
-            this.gantt.options.column_width *
-                this.duration *
-                (this.task.progress / 100) || 0;
+        this.progress_width = this.gantt.options.column_width * this.duration * (this.task.progress / 100) || 0;
         this.group = createSVG('g', {
             class:
                 'bar-wrapper' +
@@ -71,9 +68,7 @@ export default class Bar {
     prepare_expected_progress_values() {
         this.compute_expected_progress();
         this.expected_progress_width =
-            this.gantt.options.column_width *
-                this.duration *
-                (this.expected_progress / 100) || 0;
+            this.gantt.options.column_width * this.duration * (this.expected_progress / 100) || 0;
     }
 
     draw() {
@@ -123,12 +118,7 @@ export default class Bar {
             append_to: this.bar_group,
         });
 
-        animateSVG(
-            this.$expected_bar_progress,
-            'width',
-            0,
-            this.expected_progress_width,
-        );
+        animateSVG(this.$expected_bar_progress, 'width', 0, this.expected_progress_width);
     }
 
     draw_progress_bar() {
@@ -144,8 +134,7 @@ export default class Bar {
             append_to: this.bar_group,
         });
         const x =
-            (date_utils.diff(this.task._start, this.gantt.gantt_start, 'hour') /
-                this.gantt.options.step) *
+            (date_utils.diff(this.task._start, this.gantt.gantt_start, 'hour') / this.gantt.options.step) *
             this.gantt.options.column_width;
 
         let $date_highlight = document.createElement('div');
@@ -153,8 +142,7 @@ export default class Bar {
         $date_highlight.classList.add('date-highlight');
         $date_highlight.style.height = this.height * 0.8 + 'px';
         $date_highlight.style.width = this.width + 'px';
-        $date_highlight.style.top =
-            this.gantt.options.header_height - 25 + 'px';
+        $date_highlight.style.top = this.gantt.options.header_height - 25 + 'px';
         $date_highlight.style.left = x + 'px';
         this.$date_highlight = $date_highlight;
         this.gantt.$lower_header.prepend($date_highlight);
@@ -266,17 +254,13 @@ export default class Bar {
             bar_progress.getY() + bar_progress.getHeight() / 2,
 
             bar_progress.getEndX(),
-            bar_progress.getY() +
-                bar_progress.getHeight() / 2 -
-                icon_height / 2,
+            bar_progress.getY() + bar_progress.getHeight() / 2 - icon_height / 2,
 
             bar_progress.getEndX() + icon_width / 2,
             bar_progress.getY() + bar_progress.getHeight() / 2,
 
             bar_progress.getEndX(),
-            bar_progress.getY() +
-                bar_progress.getHeight() / 2 +
-                icon_height / 2,
+            bar_progress.getY() + bar_progress.getHeight() / 2 + icon_height / 2,
 
             bar_progress.getEndX() - icon_width / 2,
             bar_progress.getY() + bar_progress.getHeight() / 2,
@@ -291,12 +275,7 @@ export default class Bar {
     setup_click_event() {
         let task_id = this.task.id;
         $.on(this.group, 'mouseover', (e) => {
-            this.gantt.trigger_event('hover', [
-                this.task,
-                e.screenX,
-                e.screenY,
-                e,
-            ]);
+            this.gantt.trigger_event('hover', [this.task, e.screenX, e.screenY, e]);
         });
 
         let timeout;
@@ -306,17 +285,14 @@ export default class Bar {
             (e) =>
                 (timeout = setTimeout(() => {
                     this.show_popup(e.offsetX);
-                    document.querySelector(
-                        `#${task_id}-highlight`,
-                    ).style.display = 'block';
+                    document.querySelector(`#${task_id}-highlight`).style.display = 'block';
                 }, 200)),
         );
 
         $.on(this.group, 'mouseleave', () => {
             clearTimeout(timeout);
             this.gantt.popup?.hide?.();
-            document.querySelector(`#${task_id}-highlight`).style.display =
-                'none';
+            document.querySelector(`#${task_id}-highlight`).style.display = 'none';
         });
 
         $.on(this.group, this.gantt.options.popup_trigger, () => {
@@ -336,11 +312,7 @@ export default class Bar {
     show_popup(x) {
         if (this.gantt.bar_being_dragged) return;
 
-        const start_date = date_utils.format(
-            this.task._start,
-            'MMM D',
-            this.gantt.options.language,
-        );
+        const start_date = date_utils.format(this.task._start, 'MMM D', this.gantt.options.language);
         const end_date = date_utils.format(
             date_utils.add(this.task._end, -1, 'second'),
             'MMM D',
@@ -411,11 +383,7 @@ export default class Bar {
                 img.setAttribute('x', newImgX);
                 img_mask.setAttribute('x', newImgX);
             }
-        } else if (
-            newLabelX - imgWidth > this.$bar.getX() &&
-            x < 0 &&
-            labelEndX > viewportCentral
-        ) {
+        } else if (newLabelX - imgWidth > this.$bar.getX() && x < 0 && labelEndX > viewportCentral) {
             label.setAttribute('x', newLabelX);
             if (img) {
                 img.setAttribute('x', newImgX);
@@ -461,37 +429,23 @@ export default class Bar {
     compute_start_end_date() {
         const bar = this.$bar;
         const x_in_units = bar.getX() / this.gantt.options.column_width;
-        const new_start_date = date_utils.add(
-            this.gantt.gantt_start,
-            x_in_units * this.gantt.options.step,
-            'hour',
-        );
+        const new_start_date = date_utils.add(this.gantt.gantt_start, x_in_units * this.gantt.options.step, 'hour');
         const width_in_units = bar.getWidth() / this.gantt.options.column_width;
-        const new_end_date = date_utils.add(
-            new_start_date,
-            width_in_units * this.gantt.options.step,
-            'hour',
-        );
+        const new_end_date = date_utils.add(new_start_date, width_in_units * this.gantt.options.step, 'hour');
 
         return { new_start_date, new_end_date };
     }
 
     compute_progress() {
-        const progress =
-            (this.$bar_progress.getWidth() / this.$bar.getWidth()) * 100;
+        const progress = (this.$bar_progress.getWidth() / this.$bar.getWidth()) * 100;
         return parseInt(progress, 10);
     }
 
     compute_expected_progress() {
         this.expected_progress =
-            date_utils.diff(date_utils.today(), this.task._start, 'hour') /
-            this.gantt.options.step;
+            date_utils.diff(date_utils.today(), this.task._start, 'hour') / this.gantt.options.step;
         this.expected_progress =
-            ((this.expected_progress < this.duration
-                ? this.expected_progress
-                : this.duration) *
-                100) /
-            this.duration;
+            ((this.expected_progress < this.duration ? this.expected_progress : this.duration) * 100) / this.duration;
     }
 
     compute_x() {
@@ -517,9 +471,7 @@ export default class Bar {
     }
 
     compute_duration() {
-        this.duration =
-            date_utils.diff(this.task._end, this.task._start, 'hour') /
-            this.gantt.options.step;
+        this.duration = date_utils.diff(this.task._end, this.task._start, 'hour') / this.gantt.options.step;
     }
 
     get_snap_position(dx) {
@@ -530,27 +482,14 @@ export default class Bar {
         if (this.gantt.view_is('Week')) {
             rem = dx % (this.gantt.options.column_width / 7);
             position =
-                odx -
-                rem +
-                (rem < this.gantt.options.column_width / 14
-                    ? 0
-                    : this.gantt.options.column_width / 7);
+                odx - rem + (rem < this.gantt.options.column_width / 14 ? 0 : this.gantt.options.column_width / 7);
         } else if (this.gantt.view_is('Month')) {
             rem = dx % (this.gantt.options.column_width / 30);
             position =
-                odx -
-                rem +
-                (rem < this.gantt.options.column_width / 60
-                    ? 0
-                    : this.gantt.options.column_width / 30);
+                odx - rem + (rem < this.gantt.options.column_width / 60 ? 0 : this.gantt.options.column_width / 30);
         } else {
             rem = dx % this.gantt.options.column_width;
-            position =
-                odx -
-                rem +
-                (rem < this.gantt.options.column_width / 2
-                    ? 0
-                    : this.gantt.options.column_width);
+            position = odx - rem + (rem < this.gantt.options.column_width / 2 ? 0 : this.gantt.options.column_width);
         }
         return position;
     }
@@ -569,19 +508,14 @@ export default class Bar {
         this.compute_expected_progress();
         this.$expected_bar_progress.setAttribute(
             'width',
-            this.gantt.options.column_width *
-                this.duration *
-                (this.expected_progress / 100) || 0,
+            this.gantt.options.column_width * this.duration * (this.expected_progress / 100) || 0,
         );
     }
 
     update_progressbar_position() {
         if (this.invalid || this.gantt.options.readonly) return;
         this.$bar_progress.setAttribute('x', this.$bar.getX());
-        this.$bar_progress.setAttribute(
-            'width',
-            this.$bar.getWidth() * (this.task.progress / 100),
-        );
+        this.$bar_progress.setAttribute('width', this.$bar.getWidth() * (this.task.progress / 100));
     }
 
     update_label_position() {
@@ -598,14 +532,8 @@ export default class Bar {
             label.classList.add('big');
             if (img) {
                 img.setAttribute('x', bar.getX() + bar.getWidth() + padding);
-                img_mask.setAttribute(
-                    'x',
-                    bar.getX() + bar.getWidth() + padding,
-                );
-                label.setAttribute(
-                    'x',
-                    bar.getX() + bar.getWidth() + x_offset_label_img,
-                );
+                img_mask.setAttribute('x', bar.getX() + bar.getWidth() + padding);
+                label.setAttribute('x', bar.getX() + bar.getWidth() + x_offset_label_img);
             } else {
                 label.setAttribute('x', bar.getX() + bar.getWidth() + padding);
             }
@@ -614,15 +542,9 @@ export default class Bar {
             if (img) {
                 img.setAttribute('x', bar.getX() + padding);
                 img_mask.setAttribute('x', bar.getX() + padding);
-                label.setAttribute(
-                    'x',
-                    bar.getX() + barWidth / 2 + x_offset_label_img,
-                );
+                label.setAttribute('x', bar.getX() + barWidth / 2 + x_offset_label_img);
             } else {
-                label.setAttribute(
-                    'x',
-                    bar.getX() + barWidth / 2 - labelWidth / 2,
-                );
+                label.setAttribute('x', bar.getX() + barWidth / 2 - labelWidth / 2);
             }
         }
     }
@@ -630,15 +552,10 @@ export default class Bar {
     update_handle_position() {
         if (this.invalid || this.gantt.options.readonly) return;
         const bar = this.$bar;
-        this.handle_group
-            .querySelector('.handle.left')
-            .setAttribute('x', bar.getX() - 12);
-        this.handle_group
-            .querySelector('.handle.right')
-            .setAttribute('x', bar.getEndX() + 4);
+        this.handle_group.querySelector('.handle.left').setAttribute('x', bar.getX() - 12);
+        this.handle_group.querySelector('.handle.right').setAttribute('x', bar.getEndX() + 4);
         const handle = this.group.querySelector('.handle.progress');
-        handle &&
-            handle.setAttribute('points', this.get_progress_polygon_points());
+        handle && handle.setAttribute('points', this.get_progress_polygon_points());
     }
 
     update_arrow_position() {
@@ -651,8 +568,5 @@ export default class Bar {
 
 function isFunction(functionToCheck) {
     let getType = {};
-    return (
-        functionToCheck &&
-        getType.toString.call(functionToCheck) === '[object Function]'
-    );
+    return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
 }
